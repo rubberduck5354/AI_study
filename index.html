@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>인공지능 개념 학습 문제 사이트</title>
+<style>
+:root{--bg:#f7f7f4;--cd:#fff;--tx:#1d1d1b;--mu:#6b6b66;--ac:#3b5bdb;--ok:#2b8a3e;--no:#c92a2a;--bd:#ddddd6;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#17181c;--cd:#202228;--tx:#ececea;--mu:#9a9a94;--ac:#8ea2ff;--ok:#69db7c;--no:#ff8787;--bd:#34363d;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#17181c;--cd:#202228;--tx:#ececea;--mu:#9a9a94;--ac:#8ea2ff;--ok:#69db7c;--no:#ff8787;--bd:#34363d;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.6 system-ui,-apple-system,"Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",sans-serif}
+main{max-width:760px;margin:0 auto;padding:16px}
+h1{font-size:1.35rem;margin:.2em 0}h2{font-size:1.1rem;margin:.2em 0 .5em}
+.mu{color:var(--mu);font-size:.9rem}a{color:var(--ac)}
+nav{display:flex;gap:6px;flex-wrap:wrap;margin:12px 0}
+button,select,input,textarea{font:inherit;color:var(--tx);background:var(--cd);border:1px solid var(--bd);border-radius:8px;padding:8px 12px}
+button{cursor:pointer}button.on,button.pri{background:var(--ac);border-color:var(--ac);color:var(--bg)}
+.card{background:var(--cd);border:1px solid var(--bd);border-radius:12px;padding:14px;margin:12px 0}
+.opt{display:block;width:100%;text-align:left;margin:6px 0}
+.opt.ok{border-color:var(--ok);color:var(--ok)}.opt.no{border-color:var(--no);color:var(--no)}
+.ex{margin-top:8px;font-size:.92rem;color:var(--mu)}.ref{margin-top:6px;font-size:.9rem;color:var(--tx)}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0}
+input[type=text]{width:100%}textarea{width:100%;min-height:70px}input[type=number]{width:80px}
+.g{color:var(--ok);font-weight:600}.b{color:var(--no);font-weight:600}
+.sc{overflow-x:auto}table{border-collapse:collapse;font-size:.9rem;width:100%}td,th{border:1px solid var(--bd);padding:4px 8px;text-align:center}
+label.r{display:block;margin:4px 0}svg{max-width:100%;height:auto}
+</style></head><body><main>
+<h1>🧠 인공지능 개념 학습 문제 사이트</h1>
+<div class="mu">강의노트(Visual Assets for CS Teacher) 범위 안에서만 출제합니다. 정답을 확인하면 해당 강의노트 페이지가 함께 표시됩니다.</div>
+<nav id="nav"></nav>
+<div id="v"></div>
+</main>
+<script>
+const $=s=>document.querySelector(s),N='ABCDEFGH'.split('');
+const T=['개념 퀴즈','맹목적 탐색','휴리스틱 탐색','사회·윤리 서술'];let tab=0;
+const sh=a=>[...a].sort(()=>Math.random()-.5);
+const letters=v=>v.toUpperCase().replace(/[^A-Z]/g,'').split('');
+/* ---------- 강의노트 정답 페이지 ---------- */
+const BASE='https://luminousky.com/Visual-Assets-for-CS-Teacher/인공지능기초/';
+const RF={S2:['Ⅰ','2-2','지능적 탐색','1-2-2.지능적-탐색'],S3:['Ⅰ','2-3','탐색을 활용한 문제 해결','1-2-3.탐색을-활용한-문제-해결'],M6:['Ⅱ','1-6','기계학습 유형과 알고리즘 선정','2-1-6.기계학습-유형과-알고리즘-선정'],E2:['Ⅲ','2-2','데이터 편향성','3-2-2.데이터-편향성'],E3:['Ⅲ','2-3','윤리적 딜레마','3-2-3.윤리적-딜레마']};
+const ref=(...ks)=>`<div class="ref">📖 정답 페이지 ${ks.map(k=>{const r=RF[k];return`<a href="${encodeURI(BASE+r[3]+'.html')}" target="_blank" rel="noopener">(${r[1]}단원 [${r[2]}])</a> <span class="mu">인공지능 기초 ${r[0]}단원</span>`}).join(' · ')}</div>`;
+/* ---------- 개념 퀴즈 ---------- */
+const Q=[
+['맹목적 탐색','S3','깊이 우선 탐색(DFS)의 설명으로 옳지 않은 것은?',['갈 수 있는 끝까지 가고, 막히면 되돌아와 다른 방향을 탐색한다','현재 경로만 기억하므로 메모리를 적게 쓴다','처음 찾은 경로가 항상 가장 짧다','해가 깊은 곳에 있을 때 적합하다'],2,'DFS는 가장 짧은 경로를 찾는다는 보장이 없습니다.'],
+['맹목적 탐색','S3','너비 우선 탐색(BFS)의 설명으로 옳은 것은?',['가장 깊은 곳까지 먼저 내려간다','같은 깊이의 노드를 모두 탐색한 뒤 다음 레벨로 넘어간다','목표까지 남은 거리를 어림해 고른다','DFS보다 메모리를 적게 쓴다'],1,'BFS는 같은 깊이를 모두 탐색한 뒤 다음 레벨로 갑니다. 같은 깊이의 노드를 모두 기억해야 해서 메모리가 많이 필요합니다.'],
+['맹목적 탐색','S2','BFS가 가장 짧은 경로를 보장하려면 필요한 조건은?',['상태의 수가 적어야 한다','한 번 이동하는 비용(간선 비용)이 모두 같아야 한다','좋은 휴리스틱이 있어야 한다','목표가 깊은 곳에 있어야 한다'],1,'구간마다 이동시간이 다르면 BFS가 먼저 찾은 경로가 가장 빠른 길이라는 보장이 사라집니다.'],
+['맹목적 탐색','S2','맹목적 탐색(무정보 탐색)과 지능적 탐색의 관계로 옳은 것은?',['맹목적 탐색은 지능적 탐색의 반대말이다','맹목적 탐색은 지능적 탐색에 포함되는 두 갈래 중 하나다','지능적 탐색이 맹목적 탐색에 포함된다','맹목적 탐색은 정해진 순서가 없다'],1,'맹목적 탐색도 고르는 원칙이 정해져 있으므로 지능적 탐색의 한 갈래입니다. 목표까지 얼마나 남았는지 알려 주는 정보를 쓰지 않을 뿐입니다.'],
+['맹목적 탐색','S2','다음에 확장할 노드를 “가장 나중에 발견한 것부터” 고르는 탐색은?',['BFS','DFS','A*','최상 우선 탐색'],1,'BFS는 먼저 발견한 것부터, DFS는 가장 나중에 발견한 것부터 확장합니다.'],
+['휴리스틱 탐색','S3','휴리스틱 h(n)의 의미는?',['출발점에서 n까지 실제로 쓴 비용','n에서 목표까지 남았을 것으로 추정한 비용','n의 자식 노드 수','n의 깊이'],1,'h(n)은 아직 가 보지 않은 길이므로 어림짐작(추정값)입니다. 실제로 지나온 비용은 g(n)입니다.'],
+['휴리스틱 탐색','S3','A* 알고리즘이 다음 노드를 고르는 기준은?',['h(n)이 가장 작은 노드','g(n)이 가장 큰 노드','f(n)=g(n)+h(n)이 가장 작은 노드','가장 나중에 발견한 노드'],2,'A*는 지금까지 온 실제 비용과 남은 예상 비용을 더한 f(n)이 가장 작은 노드를 고릅니다.'],
+['휴리스틱 탐색','S3','최상 우선 탐색(f=h)의 특징으로 옳은 것은?',['지나온 비용을 함께 고려해 최단 경로를 보장한다','목표를 향해 빠르게 가지만 지나온 비용을 보지 않아 최단 경로를 보장하지 못한다','맹목적 탐색의 한 종류다','평가 함수가 없다'],1,'h(n)만 보므로 목표에는 빨리 가까워지지만, 비싼 길을 고를 수 있습니다.'],
+['휴리스틱 탐색','S3','A*에서 h(n)을 실제 남은 비용보다 크게 잡으면?',['항상 더 빨리 최단 경로를 찾는다','가장 짧은 경로를 놓칠 수 있다','답은 맞지만 노드를 더 많이 확장한다','탐색이 불가능해진다'],1,'h를 넘겨 잡지만 않으면 A*는 최단 경로를 찾습니다. 크게 잡으면 가까운 길을 멀다고 판단해 제쳐 둘 수 있습니다.'],
+['평가함수','S3','평가 함수 f(n)에 대한 설명으로 옳은 것은?',['후보 노드마다 매기는 점수로, 이 수업에서는 작을수록 먼저 확장한다','목표 노드에서만 계산한다','맹목적 탐색에서 가장 중요하게 쓴다','항상 클수록 좋은 값이다'],0,'평가 함수는 후보 가운데 어느 것을 다음에 확장할지 정하려고 노드마다 매기는 점수입니다. (클수록 좋은 점수형도 있으므로 방향을 먼저 확인합니다.)'],
+['평가함수','S3','8-퍼즐에서 “제자리에 있는 타일 수”를 h(n)으로 쓰고 값이 가장 작은 노드를 고르면 생기는 문제는?',['아무 문제 없다','가장 나쁜(목표에서 먼) 노드를 고르게 된다','탐색이 더 빨라진다','g(n)과 단위가 같아진다'],1,'제자리에 있는 타일 수는 클수록 좋은 점수형입니다. 방향을 확인하지 않고 min을 쓰면 반대의 노드를 고릅니다. 비용형은 “제자리에 없는 타일 수”입니다.'],
+['평가함수','S3','f(n)=g(n)+h(n)처럼 두 값을 더해 평가 함수를 만들 때 반드시 필요한 것은?',['두 값의 단위와 방향(작을수록 좋음)이 같아야 한다','h는 항상 g보다 작아야 한다','두 값 모두 정수여야 한다','g와 h를 곱해야 한다'],0,'단위와 방향이 다르면 더한 값이 아무 뜻도 없습니다. 점수형이면 h′=최댓값−h처럼 방향을 뒤집어 맞춥니다.'],
+['평가함수','S3','1km=2분, 환승 1회=5분, 혼잡도 1단계=3분으로 환산할 때, 거리 4km·환승 2회·혼잡도 3이면 h는?',['21분','27분','29분','33분'],1,'4×2 + 2×5 + 3×3 = 8+10+9 = 27분. 서로 다른 정보를 같은 단위(분)로 바꿔 더합니다.'],
+['지도·비지도','M6','지도학습과 비지도학습을 가르는 기준은?',['데이터의 양','레이블(정답)이 붙어 있는지','맞히려는 값이 숫자인지','컴퓨터 성능'],1,'레이블이 붙은 데이터로 규칙을 찾으면 지도학습, 레이블 없이 비슷함을 근거로 구조를 찾으면 비지도학습입니다.'],
+['회귀·분류·군집','M6','회귀와 분류를 구분하는 기준으로 옳은 것은?',['선을 긋는지 여부','맞히려는 값이 촘촘한 숫자면 회귀, 정해진 몇 갈래 중 하나면 분류','레이블 필요 여부','데이터의 많고 적음'],1,'기온·가격 같은 연속적인 숫자는 회귀, 스팸/정상 같은 범주는 분류입니다.'],
+['회귀·분류·군집','M6','자전거 대여소의 최고 기온으로 그날의 대여 건수를 예측하는 문제는?',['회귀','분류','군집','강화학습'],0,'맞히려는 값이 연속적인 숫자(대여 건수)이므로 회귀입니다. 독립 변수 하나면 단순 선형 회귀입니다.'],
+['회귀·분류·군집','M6','스팸 메일을 걸러 내는 문제는?',['회귀','분류','군집','강화학습'],1,'스팸/정상 두 갈래 중 하나를 맞히는 이항 분류입니다.'],
+['회귀·분류·군집','M6','매점 결제 기록만으로 비슷한 손님끼리 묶어 보는 문제는?',['지도학습의 분류','지도학습의 회귀','비지도학습의 군집','강화학습'],2,'레이블이 없고 나눌 칸이 미리 없으므로 군집입니다. 묶인 덩어리의 의미는 사람이 해석합니다.'],
+['회귀·분류·군집','M6','분류와 군집의 차이로 옳은 것은?',['분류는 나눌 칸의 이름이 미리 정해져 있고, 군집은 묶은 뒤에 덩어리가 생긴다','군집은 레이블이 필요하다','분류는 레이블이 필요 없다','둘은 같은 것이다'],0,'분류는 정답이 적힌 데이터로 어느 칸에 넣을지 배우고, 군집은 칸이 없는 상태에서 비슷한 것끼리 묶습니다.'],
+['기계학습 알고리즘','M6','k-최근접 이웃(k-NN)의 분류 방식은?',['가까운 k개 이웃의 다수 레이블로 분류','질문을 던져 가지를 나눔','중심점을 반복해서 옮김','양쪽에서 가장 먼 경계를 찾음'],0,'k가 너무 작으면 이웃 하나에 흔들리고, 너무 크면 동네의 특징이 뭉개집니다. 여러 k를 시험해 고릅니다.'],
+['기계학습 알고리즘','M6','의사결정트리의 장점과 한계는?',['설명하기 쉽지만 가지가 너무 많으면 과적합이 생긴다','정확도가 항상 가장 높다','군집에 쓰인다','값의 범위를 반드시 정규화해야 한다'],0,'질문 분기로 판단 근거를 설명하기 쉽지만, 가지를 늘릴수록 훈련 데이터에만 맞는 과적합이 생길 수 있습니다.'],
+['기계학습 알고리즘','M6','k-평균(k-means)의 설명으로 옳은 것은?',['정답 레이블로 학습한다','k를 미리 정하고, 가장 가까운 중심점에 배정한 뒤 중심점을 평균 위치로 옮기기를 반복한다','처음 중심점 위치와 상관없이 결과가 항상 같다','범주형 데이터에 가장 알맞다'],1,'처음 중심점을 랜덤으로 찍기 때문에 결과가 달라질 수 있어 여러 번 실행해 비교합니다.'],
+['기계학습 알고리즘','M6','k-NN과 SVM처럼 거리를 계산하는 알고리즘에 값의 범위를 맞추는 정규화가 필요한 이유는?',['값의 폭이 넓은 속성이 거리를 거의 혼자 결정해 버리기 때문','계산이 느려지기 때문','레이블이 없기 때문','범주형이기 때문'],0,'통학 거리(0~5000m)와 공부 시간(0~6시간)을 그대로 쓰면 값의 폭이 큰 쪽이 거리를 지배합니다.'],
+['기계학습 알고리즘','M6','로지스틱 회귀와 서포트 벡터 머신(SVM)의 설명으로 옳은 것은?',['로지스틱 회귀는 확률로 답하고 문턱(0.5)에서 나누며, SVM은 양쪽에서 가장 멀리 떨어진 경계를 고른다','로지스틱 회귀는 군집 알고리즘이다','SVM은 설명하기 가장 쉽다','둘 다 레이블이 필요 없다'],0,'로지스틱 회귀는 이름과 달리 분류에 쓰고, SVM은 마진(여유 폭)이 가장 넓은 경계를 고릅니다.'],
+['기계학습 알고리즘','M6','시행착오 속에서 받는 보상과 벌점을 근거로 행동 방식을 익히는 학습은?',['지도학습','비지도학습','강화학습','군집'],2,'강화학습은 정답 대신 보상과 벌점으로 학습하며, 데이터를 환경과 주고받으며 스스로 만들어 냅니다.'],
+['사회·윤리','E2','데이터 편향성에 대한 설명으로 옳은 것은?',['기계가 계산하므로 항상 공정하다','학습 데이터가 실제 세상을 고르게 담지 못하고 한쪽으로 치우친 것','AI가 특정 집단을 싫어하게 된 것','컴퓨터 성능 부족으로 생기는 계산 오류'],1,'모델에는 미워하는 마음이 없습니다. 데이터를 고르고 결과를 쓰기로 정한 것은 사람입니다.'],
+['사회·윤리','E2','“알고 싶은 것(개인의 실력)”을 “다른 값(학교의 과거 성적)”으로 대신 측정하도록 정해 생기는 편향은?',['데이터 입력 오류','대리 지표를 쓴 설계에서 오는 알고리즘 편향','학습 데이터 양 부족','일부러 만든 차별'],1,'데이터가 사실 그대로여도 설계가 어긋나면 편향이 남습니다. 데이터를 더 모아도 이 구조는 바뀌지 않습니다.'],
+['사회·윤리','E2','전체 정확도가 96%인데 한 집단에서는 69%였습니다. 옳은 설명은?',['어느 집단이든 96% 가깝게 맞힌다','그 집단에는 세 번에 한 번꼴로 틀리는 장치이며 전체 숫자만으로는 드러나지 않는다','집단별로 나눠 측정해서 생긴 문제다','나누어 측정하면 편향이 사라진다'],1,'편향은 성능이 나쁘다는 신호가 아니라 성능이 고르지 않다는 신호로 나타납니다. 그래서 집단별로 나누어 측정합니다.'],
+['사회·윤리','E2','“성별 칸을 지웠으니 성별 편향이 없다”는 말에 남는 어려움은?',['없다','성별과 함께 움직이는 다른 값이 남아 있으면 결과가 거의 그대로일 수 있다','성별 칸은 지울 수 없다','정확도가 반드시 떨어진다'],1,'값 하나를 빼는 것만으로 편향이 사라지지 않습니다. 줄이고, 나누어 측정하고, 드러나면 고치는 것이 할 수 있는 일입니다.'],
+['사회·윤리','E2','판단 근거를 사람이 읽을 수 있게 만들려는 연구 방향은?',['블랙박스','설명 가능한 인공지능(XAI)','과적합','정규화'],1,'속을 볼 수 없는 블랙박스는 검토할 수 없으므로 편향을 다루기 어렵습니다. 다만 설명은 검토를 위한 재료일 뿐 결론이 아닙니다.'],
+['사회·윤리','E3','“그냥 어려운 문제”와 “윤리적 딜레마”의 차이는?',['딜레마는 규모가 큰 문제다','어려운 문제는 더 알아보면 답에 가까워지지만, 딜레마는 어느 쪽을 골라도 소중한 것 하나를 내려놓게 된다','딜레마는 정답이 없어 검토할 필요가 없다','딜레마는 자료를 더 모으면 풀린다'],1,'딜레마는 무엇을 먼저 지킬지를 사람이 정해야 답이 정해집니다. 각 선택이 지키는 것·포기하는 것을 나누어 적어 검토합니다.'],
+['사회·윤리','E3','자율 주행 자동차가 피할 수 없는 상황에서 하는 행동에 대한 설명으로 옳은 것은?',['그 순간 자동차가 스스로 옳은 것을 고민해 결정한다','무엇을 먼저 지킬지는 미리 사람이 정해 둔 것이고 자동차는 그대로 움직인다','전 세계 설문 결과의 다수 의견이 곧 옳은 규칙이다','실제 도로에서도 상황이 항상 정확히 파악된다'],1,'진짜 물음은 “무엇을 먼저 지키게 할 것이며 누가 정하는가”입니다. 설문은 논의를 시작할 자료이지 결론이 아닙니다.'],
+['사회·윤리','E3','트롤리 딜레마에서 공리주의적 관점과 의무주의적 관점의 차이는?',['공리주의는 결과(이로움과 해로움의 합), 의무주의는 지켜야 할 의무를 보고 판단한다','공리주의는 의무, 의무주의는 결과를 본다','둘 다 결과만 본다','둘 중 하나는 틀린 관점이다'],0,'둘은 서로 다른 것을 재는 두 개의 자입니다. 두 자가 다른 답을 가리킬 때가 딜레마입니다.']];
+let qs=[],qf='전체',qa=0,qn=0;
+function qInit(){qs=sh(Q.filter(q=>qf=='전체'||q[0]==qf)).map(([c,r,q,o,a,e])=>({c,r,q,e,o:sh(o.map((t,i)=>({t,ok:i==a}))),d:-1}));qa=qn=0}
+function vQuiz(){
+ const cats=['전체',...new Set(Q.map(q=>q[0]))];
+ $('#v').innerHTML=`<div class="row">${cats.map(c=>`<button class="${c==qf?'on':''}" onclick="qf='${c}';qInit();draw()">${c}</button>`).join('')}</div>
+ <div class="mu">정답 ${qa} / 푼 문제 ${qn} / 전체 ${qs.length}</div>`+qs.map((x,i)=>`<div class="card"><div class="mu">${x.c}</div><b>${i+1}. ${x.q}</b>
+ ${x.o.map((o,j)=>`<button class="opt ${x.d<0?'':o.ok?'ok':x.d==j?'no':''}" ${x.d<0?'':'disabled'} onclick="pick(${i},${j})">${o.t}</button>`).join('')}
+ ${x.d<0?'':`<div class="ex">${x.o[x.d].ok?'<span class="g">정답</span>':'<span class="b">오답</span>'} · ${x.e}</div>${ref(x.r)}`}</div>`).join('')+`<button onclick="qInit();draw()">문제 다시 섞기</button>`}
+function pick(i,j){const x=qs[i];if(x.d>=0)return;x.d=j;qn++;if(x.o[j].ok)qa++;draw()}
+/* ---------- 그래프 공통 ---------- */
+function hops(G,s){const d={[s]:0},q=[s];while(q.length){const n=q.shift();for(const m in G[n])if(!(m in d)){d[m]=d[n]+1;q.push(m)}}return d}
+function mk(){for(;;){const G={};N.forEach(n=>G[n]={});const r=Math.random;
+ const add=(a,b)=>{if(a==b||G[a][b])return;G[a][b]=G[b][a]=2+Math.floor(r()*9)};
+ for(let i=1;i<8;i++)add(N[i],N[Math.floor(r()*i)]);
+ for(let k=0;k<4;k++)add(N[Math.floor(r()*8)],N[Math.floor(r()*8)]);
+ const s=N[Math.floor(r()*8)],d=hops(G,s),mx=Math.max(...Object.values(d));
+ if(mx>=3)return{G,s,g:N.find(n=>d[n]==mx)}}}
+function svg(p){const pos={};N.forEach((n,i)=>{const a=i/8*6.283-1.571;pos[n]=[160+115*Math.cos(a),150+115*Math.sin(a)]});let e='';
+ for(const a of N)for(const b in p.G[a])if(a<b){const[x1,y1]=pos[a],[x2,y2]=pos[b];e+=`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="var(--mu)"/><text x="${(x1+x2)/2}" y="${(y1+y2)/2}" font-size="11" text-anchor="middle" dominant-baseline="middle" fill="var(--ac)" stroke="var(--cd)" stroke-width="3" paint-order="stroke">${p.G[a][b]}</text>`}
+ return`<svg viewBox="0 0 320 300" width="340">${e}${N.map(n=>`<circle cx="${pos[n][0]}" cy="${pos[n][1]}" r="15" fill="${n==p.s?'var(--ac)':n==p.g?'var(--ok)':'var(--cd)'}" stroke="var(--tx)"/><text x="${pos[n][0]}" y="${pos[n][1]}" text-anchor="middle" dominant-baseline="central" font-weight="700" fill="${n==p.s||n==p.g?'var(--bg)':'var(--tx)'}">${n}</text>`).join('')}</svg>`}
+const pathOf=(par,g)=>{const p=[g];while(par[p[0]])p.unshift(par[p[0]]);return p};
+const cost=(G,p)=>p.slice(1).reduce((a,n,i)=>a+G[p[i]][n],0);
+const res=(ok,t)=>`<div>${ok?'<span class="g">✓</span>':'<span class="b">✗</span>'} ${t}</div>`;
+/* ---------- 맹목적 탐색 ---------- */
+let P1=mk();
+function blind(alg,{G,s,g}){const nb=n=>Object.keys(G[n]).sort(),order=[],par={};
+ if(alg=='BFS'){const q=[s],seen=new Set([s]);while(q.length){const n=q.shift();order.push(n);if(n==g)break;for(const m of nb(n))if(!seen.has(m)){seen.add(m);par[m]=n;q.push(m)}}}
+ else{const seen=new Set();let f=0;const d=n=>{seen.add(n);order.push(n);if(n==g){f=1;return}for(const m of nb(n))if(!seen.has(m)){par[m]=n;d(m);if(f)return}};d(s)}
+ const path=pathOf(par,g);return{order,path,t:cost(G,path)}}
+const CR=['먼저 발견한(찾은) 노드부터 확장','가장 나중에 발견한 노드부터 확장','누적 이동시간이 가장 짧은 노드부터 확장','평가 함수(휴리스틱) 값이 가장 작은 노드부터 확장','이웃 노드 중 무작위로 선택'];
+function vBlind(){const p=P1;
+ $('#v').innerHTML=`<div class="card"><h2>[자료1] 장소 간 이동시간(분)</h2>${svg(p)}
+ <div class="mu">출발 <b>${p.s}</b>(파랑) → 목표 <b>${p.g}</b>(초록). 선 위 숫자는 이동시간입니다.</div></div>
+ <div class="card"><b>문제</b> 자료1에서 맹목적 탐색 알고리즘(BFS 또는 DFS) 하나로 목표까지 경로를 찾으세요. 탐색 중에는 이동시간을 쓰지 않습니다. 선택한 알고리즘, 다음 상태 선택 기준, 탐색 순서, 최종 경로, 총 이동시간을 쓰세요.
+ <div class="ex">규칙: 이웃은 알파벳 순서로 먼저 선택 · 노드를 확장(방문)하는 순서를 기록하고 목표 노드를 만나면 종료(목표 포함) · 이미 발견·방문한 노드는 다시 넣지 않음 · DFS는 한 방향으로 끝까지 갔다가 막히면 되돌아옴</div></div>
+ <div class="card"><div class="row"><b>알고리즘</b><select id="al"><option>BFS</option><option>DFS</option></select></div>
+ <b>다음 상태 선택 기준</b>${CR.map((c,i)=>`<label class="r"><input type="radio" name="cr" value="${i}"> ${c}</label>`).join('')}
+ <div class="row"><b>탐색 순서</b><input type="text" id="od" placeholder="예: A, B, C"></div>
+ <div class="row"><b>최종 경로</b><input type="text" id="pa" placeholder="예: A, C, G"></div>
+ <div class="row"><b>총 이동시간(분)</b><input type="number" id="tt"></div>
+ <button class="pri" onclick="gradeB()">채점</button> <button onclick="P1=mk();draw()">새 문제</button><div id="out" class="ex"></div></div>`}
+function gradeB(){const alg=$('#al').value,a=blind(alg,P1),cr=document.querySelector('[name=cr]:checked'),ce=alg=='BFS'?0:1;
+ const o=letters($('#od').value),pa=letters($('#pa').value),t=+$('#tt').value;
+ $('#out').innerHTML=res(cr&&+cr.value==ce,`선택 기준: ${CR[ce]}`)+res(o.join()==a.order.join(),`탐색 순서: ${a.order.join(' → ')}`)+res(pa.join()==a.path.join(),`최종 경로: ${a.path.join(' → ')}`)+res(t==a.t,`총 이동시간: ${a.path.slice(1).map((n,i)=>P1.G[a.path[i]][n]).join('+')} = ${a.t}분`)+ref('S2','S3')}
+/* ---------- 휴리스틱 탐색 ---------- */
+let P2=mkH(),W={d:[1,2],t:[1,5],c:[0,3]};
+function mkH(){const b=mk(),ds=hops(b.G,b.g),r=Math.random,d={};
+ N.forEach(n=>{const h=ds[n];d[n]=n==b.g?{d:0,t:0,c:0}:{d:+(h*1.5+r()*1.4).toFixed(1),t:Math.min(3,Math.floor(h*.6+r()*1.6)),c:1+Math.floor(r()*5)}});return{...b,d}}
+function heur(mode,p,w){const h={};N.forEach(n=>h[n]=+(p.d[n].d*w.d+p.d[n].t*w.t+p.d[n].c*w.c).toFixed(2));
+ const G=p.G,open={[p.s]:{g:0,p:null}},gb={[p.s]:0},closed=new Set(),order=[],par={},log=[];
+ while(Object.keys(open).length){const f=n=>(mode=='A'?open[n].g:0)+h[n];
+  const ks=Object.keys(open).sort((a,b)=>f(a)-f(b)||(a<b?-1:1)),c=ks[0];
+  log.push(`${c} 선택 ← 후보 ${ks.map(k=>`${k}(${+f(k).toFixed(2)})`).join(', ')}`);
+  const{g:gc,p:pp}=open[c];delete open[c];closed.add(c);order.push(c);if(pp)par[c]=pp;if(c==p.g)break;
+  for(const m in G[c]){const ng=gc+G[c][m];
+   if(mode=='A'){if(!(m in gb)||ng<gb[m]){gb[m]=ng;open[m]={g:ng,p:c};closed.delete(m)}}
+   else if(!closed.has(m)&&!(m in open))open[m]={g:ng,p:c}}}
+ const path=pathOf(par,p.g);return{h,order,path,t:cost(G,path),log}}
+function vHeur(){const p=P2,rows=N.map(n=>`<tr><td>${n}</td><td>${p.d[n].d}</td><td>${p.d[n].t}</td><td>${p.d[n].c}</td></tr>`).join('');
+ const wi=(k,lab,u)=>`<div class="row"><label><input type="checkbox" id="c${k}" ${W[k][0]?'checked':''}> ${lab}</label> 1${u} = <input type="number" id="w${k}" step="0.1" min="0" value="${W[k][1]}"> 분</div>`;
+ $('#v').innerHTML=`<div class="card"><h2>[자료1] 이동시간(분)</h2>${svg(p)}<div class="mu">출발 ${p.s} → 목표 ${p.g}</div></div>
+ <div class="card"><h2>[자료2] 장소별 정보 (목표 ${p.g} 기준)</h2><div class="sc"><table><tr><th>장소</th><th>직선거리(km)</th><th>예상 환승(회)</th><th>혼잡도(1~5)</th></tr>${rows}</table></div></div>
+ <div class="card"><b>문제</b> 자료2에서 두 가지 이상을 골라 분 단위로 환산해 더한 h(n)을 만들고, 그 h로 목표까지 탐색하는 순서를 쓰세요. 동점이면 알파벳 순서가 먼저입니다. g(n)은 자료1의 구간별 이동시간을 합산합니다.
+ <div class="ex">세 값 모두 클수록 목표에서 멀다고 보는 비용형(작을수록 좋음)이라 방향이 같습니다. 환산 기준을 너무 크게 잡으면 h가 실제 남은 시간을 넘겨 A*도 최단 경로를 놓칠 수 있습니다.</div>
+ ${wi('d','목적지까지 직선거리','km')}${wi('t','예상 환승 횟수','회')}${wi('c','목적지 방향 교통 혼잡도','단계')}
+ <div class="row"><b>탐색 방식</b><select id="md"><option value="G">최상 우선 탐색 f=h(n)</option><option value="A">A* f=g(n)+h(n)</option></select></div>
+ <div class="row"><b>탐색 순서</b><input type="text" id="od" placeholder="예: ${p.s}, B, C"></div>
+ <div class="row"><b>최종 경로</b><input type="text" id="pa"></div><div class="row"><b>총 이동시간(분)</b><input type="number" id="tt"></div>
+ <button class="pri" onclick="gradeH()">채점</button> <button onclick="P2=mkH();draw()">새 문제</button><div id="out" class="ex"></div></div>`}
+function gradeH(){const w={};let cnt=0;for(const k of'dtc'){const on=$('#c'+k).checked;w[k]=on?+$('#w'+k).value||0:0;cnt+=on;W[k]=[on,$('#w'+k).value]}
+ if(cnt<2){$('#out').innerHTML='<span class="b">두 가지 이상 선택하세요.</span>';return}
+ const a=heur($('#md').value,P2,w),opt=heur('A',P2,{d:0,t:0,c:0}).t,o=letters($('#od').value),pa=letters($('#pa').value),t=+$('#tt').value;
+ $('#out').innerHTML=res(o.join()==a.order.join(),`탐색 순서: ${a.order.join(' → ')}`)+res(pa.join()==a.path.join(),`최종 경로: ${a.path.join(' → ')}`)+res(t==a.t,`총 이동시간: ${a.t}분`)+
+ `<div>이 지도의 실제 최단 이동시간은 ${opt}분 → ${a.t==opt?'찾은 경로가 최단입니다.':'찾은 경로는 최단이 아닙니다. (최상 우선은 g를 보지 않고, h를 실제보다 크게 잡으면 A*도 최단을 놓칠 수 있습니다.)'}</div>`+
+ `<div class="sc"><table><tr><th>장소</th>${N.map(n=>`<th>${n}</th>`).join('')}</tr><tr><td>h(n)</td>${N.map(n=>`<td>${a.h[n]}</td>`).join('')}</tr></table></div><div>단계별 선택 (괄호 안은 f값):</div>`+a.log.map((l,i)=>`<div>${i+1}) ${l}</div>`).join('')+ref('S3','S2')}
+/* ---------- 사회·윤리 서술 ---------- */
+const ET=[
+{t:'채용 AI',r:['E2'],k:[['지원서|이력서|심사|선발|채용','삶|기회|결정','불리|불이익|집단'],['편향|치우','과거|기록','차별|성별|집단','대리 지표|대신 측정|설계'],['집단별|나누어 측정','자료|데이터|모자란','기준|목표|밝히|공개','이의|사람|검토|절차|되돌']],
+ m:['이력서를 걸러 주는 시스템이 사람의 삶을 크게 바꾸는 선발 결정에 쓰이면서, 특정 집단이 계속 불리한 결과를 받는 일이 확인되었다.','과거 합격자 기록을 학습하면 아무도 차별할 뜻이 없어도 과거의 치우침(특정 성별 표현에 낮은 점수 등)이 반복된다(데이터 편향). 목표를 “과거 합격자와 닮은 정도”로 대신 측정한 설계도 문제다.','어느 집단의 자료가 얼마나 들어 있는지 점검해 보충하고, 목표와 기준을 밝히며, 집단별로 나누어 성능을 측정한다. 쓴 뒤에도 지켜보고 이의 제기 통로와 되돌리는 절차를 둔다. 성별 칸만 지우는 것으로는 부족하다.']},
+{t:'얼굴 인식',r:['E2','E3'],k:[['찾|실종|잃어버린','출입|본인 확인|신원','빠르|편리'],['찍|감시|사생활','미리|할 것 같은','오인식|틀리|오류|정확도','피부색|여성|집단'],['알리|고지|동의','이의|되돌|통로','쓰지 않|금지|제한','집단별|나누어 측정|사진 수|균형']],
+ m:['잃어버린 사람을 찾거나 출입을 확인하는 일을 빠르게 할 수 있다.','지나다니는 모두가 늘 찍히고, 아직 아무 일도 하지 않은 사람을 “할 것 같은 사람”으로 미리 나누는 데 쓰일 수 있다. 또 학습 사진이 특정 집단에 쏠려 피부색이 어두운 사람과 여성의 얼굴에서 오류가 높게 나온 사례가 있다.','누구에게 무엇을 미리 알리고 동의받을지, 결과가 이상할 때 말하고 되돌릴 통로, 쓰지 않기로 정할 경우를 조건으로 붙인다. 집단별 사진 수를 맞추고 집단별로 나누어 정확도를 측정한다.']},
+{t:'자율 주행 자동차',r:['E3'],k:[['생명|안전|사고','운전|판단|넘','도로'],['딜레마|어느 쪽을 골라도|포기','미리|정해 둔|누가 정','확실하지 않|인식|잘못','책임'],['지키는 것|포기하는 것|대가','설명','사람에게 넘|언제','논의|조건|합의|설문']],
+ m:['사람의 생명·안전과 맞닿은 운전 판단을 기계에 넘기는 일이라, 사고 상황에서의 선택 기준이 사회적 문제가 된다.','피할 수 없는 상황에서 무엇을 먼저 지킬지는 어느 쪽을 골라도 소중한 것을 내려놓는 딜레마다. 자동차가 순간에 고민하는 것이 아니라 사람이 미리 정해 둔 것이며, 실제 도로에서는 앞의 대상을 잘못 알아보기도 한다.','각 선택이 지키는 것과 포기하는 것, 그 대가가 누구에게 돌아가는지, 정한 까닭을 설명할 수 있는지를 검토한다. 확실하지 않을 때 언제 사람에게 넘길지도 정한다. 설문 결과는 논의의 자료일 뿐 결론이 아니다.']},
+{t:'창작물 생성 AI',r:['E3','E2'],k:[['표현|만들어 본 적','그림|음악|창작'],['권리|저작','원래 작품|원작|학습에 쓰인','쏠|편향|치우'],['조건|동의|알리','자료|모자란|균형','이의|되돌','비판적|검토']],
+ m:['그림이나 음악을 만들어 본 적 없는 사람도 자기 생각을 표현할 수 있게 된다.','결과물의 권리가 누구에게 있는지, 학습에 쓰인 원래 작품의 창작자에게 무엇을 해야 하는지가 아직 정리되지 않았다. 또 학습 자료의 치우침이 결과에서 현실보다 더 커질 수 있다.','사용 조건(사전 고지·동의, 이의 제기와 되돌림)을 붙이고, 어느 집단의 자료가 얼마나 들어 있는지 살펴 모자란 쪽을 보충한다. 결과를 비판적으로 검토한다.']}];
+let ei=0;
+function vEthic(){const e=ET[ei];$('#v').innerHTML=`<div class="row">${ET.map((x,i)=>`<button class="${i==ei?'on':''}" onclick="ei=${i};draw()">${x.t}</button>`).join('')}</div>
+ <div class="card"><b>주제: ${e.t}</b><div class="mu">사회에 미치는 영향, 활용 과정에서 생길 수 있는 윤리적 문제, 이를 줄이거나 해결할 방법을 간단히 쓰세요.</div>
+ <div class="row"><b>사회적 영향</b></div><textarea id="e1"></textarea><div class="row"><b>윤리적 문제</b></div><textarea id="e2"></textarea><div class="row"><b>해결 방법</b></div><textarea id="e3"></textarea>
+ <div class="row"><button class="pri" onclick="gradeE()">핵심 키워드 점검</button></div><div id="out" class="ex"></div></div>`}
+function gradeE(){const e=ET[ei],L=['사회적 영향','윤리적 문제','해결 방법'];let h='<div>단어 일치로 점검하므로 참고용입니다. 표현이 달라도 뜻이 같으면 맞는 답입니다.</div>';
+ L.forEach((l,i)=>{const tx=$('#e'+(i+1)).value,hit=e.k[i].map(a=>a.split('|').some(w=>tx.includes(w)));
+  h+=`<div><b>${l}</b> ${hit.filter(Boolean).length}/${hit.length}</div>`+e.k[i].map((a,j)=>`<div>${hit[j]?'<span class="g">✓</span>':'<span class="b">·</span>'} ${a.split('|').join(' / ')}</div>`).join('')+`<div class="mu">예시: ${e.m[i]}</div>`});
+ $('#out').innerHTML=h+ref(...e.r)}
+/* ---------- 라우팅 ---------- */
+function draw(){$('#nav').innerHTML=T.map((t,i)=>`<button class="${i==tab?'on':''}" onclick="tab=${i};draw()">${t}</button>`).join('');[vQuiz,vBlind,vHeur,vEthic][tab]()}
+qInit();draw();
+</script></body></html>
